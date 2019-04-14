@@ -39,8 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles', 
-    'corsheaders',   
+    'corsheaders',
+    'graphene_django',   
 ]
+
+# GRAPHENE = {
+#     'SCHEMA': 'jectman.schema.schema'
+# }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
