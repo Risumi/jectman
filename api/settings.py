@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 ]
 
 # GRAPHENE = {
-#     'SCHEMA': 'jectman.schema.schema'
+#     'SCHEMA': 'jectman.query.schema'
 # }
 
 
