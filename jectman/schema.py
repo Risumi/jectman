@@ -19,59 +19,103 @@ class SprintType(DjangoObjectType):
     class Meta:
         model = Sprint
 
-class CustomNode(relay.Node): 
-    class Meta:
-        name = 'Node'
-
-    @staticmethod
-    def to_global_id(type, id):
-        #returns a non-encoded ID
-        return id
-
-    @staticmethod
-    def get_node_from_global_id(info, global_id, only_type=None):
-        model = getattr(Query,info.field_name).field_type._meta.model
-        return model.objects.get(id=global_id)
-
-class BacklogNode(DjangoObjectType):
-    class Meta:
-        # Assume you have an Animal model defined with the following fields
-        model = Backlog
-        filter_fields = ['id_project']
-        interfaces = (CustomNode,)        
-
 class CreateProject(graphene.Mutation):
     id = graphene.String()
     name = graphene.String()    
-
+    description = graphene.String()
+    status = graphene.String()
     #2
     class Arguments:
         id = graphene.String()
-        name = graphene.String()    
+        name = graphene.String()
+        description = graphene.String()
+        status = graphene.String()    
+
+    #3
+    def mutate(self, info, id, name,description,status):
+        project = Project(id=id, name=name,description=description,status=status)
+        project.save()
+
+        return CreateProject(
+            id=project.id,
+            name=project.name,
+            description=project.description,
+            status=project.status            
+        )
+class CreateSprint(graphene.Mutation):
+    id = graphene.String()
+    id_project = graphene.String()    
+    begindate = graphene.Date()
+    enddate = graphene.Date()
+    goal = graphene.String()
+    #2
+    class Arguments:
+        id = graphene.String()
+        id_project = graphene.String()    
+        begindate = graphene.Date()
+        enddate = graphene.Date()
+        goal = graphene.String() 
+
+    #3
+    def mutate(self, info, id, id_project,begindate,enddate,goal):
+        sprint = Sprint(id=id, id_project=id_project,begindate=begindate,enddate=enddate,goal=goal)
+        sprint.save()
+
+        return CreateSprint(
+            id = graphene.String(),
+            id_project = graphene.String(),
+            begindate = graphene.Date(),
+            enddate = graphene.Date(),
+            goal = graphene.String()             
+        )
+
+class CreateBacklog(graphene.Mutation):
+    id = graphene.String()
+    id_project = graphene.String()
+    id_sprint = graphene.String()
+    name = graphene.String()        
+    status = graphene.String()
+    begindate = graphene.Date()
+    enddate = graphene.Date()
+    description = graphene.String()
+    #2
+    class Arguments:
+        id = graphene.String()
+        id_project = graphene.String()
+        id_sprint = graphene.String()
+        name = graphene.String()        
+        status = graphene.String()
+        begindate = graphene.Date()
+        enddate = graphene.Date()
+        description = graphene.String()
 
     #3
     def mutate(self, info, id, name):
-        project = Project(id=id, name=name)
-        project.save()
-
-        return CreateLink(
-            id=project.id,
-            name=project.name,            
+        backlog = Backlog(id=id,id_project=id_project,id_sprint=id_sprint,name=name,status=status,begindate=begindate,enddate=enddate,description=description)
+        backlog.save()
+        return CreateBacklog(
+            id = backlog.id,
+            id_project = backlog.id_project,
+            id_sprint = backlog.id_sprint,
+            name = backlog.name,
+            status = backlog.status,
+            begindate = backlog.begindate,
+            enddate = backlog.enddate,
+            description = backlog.description
         )
 
 #4
 class Mutation(graphene.ObjectType):
     create_project = CreateProject.Field()
+    create_backlog = CreateBacklog.Field()
 
 class Query(object):
-    all_project= graphene.List(ProjectType)
-    # all_backlog = graphene.List(BacklogType)
+    all_project= graphene.List(ProjectType)    
     backlog = graphene.List(BacklogType, id=graphene.String())
     sprint = graphene.List(SprintType, id=graphene.String())
-
-
-    backloga = CustomNode.Field(BacklogNode)
-    filter_backloga = DjangoFilterConnectionField(BacklogNode)
+    
+    def resolve_all_project(self, info, **kwargs):
+        return Project.objects.all()
 
     def resolve_backlog(self, info, id=None, **kwargs):
             # The value sent with the search parameter will be in the args variable         
@@ -80,10 +124,7 @@ class Query(object):
                     Q(id_project__id__iexact=id)                    
                 )
                 return Backlog.objects.filter(filter)
-            return Backlog.objects.all()
-
-    def resolve_all_project(self, info, **kwargs):
-        return Project.objects.all()
+            return Backlog.objects.all()    
 
     def resolve_sprint(self, info, id=None, **kwargs):
             # The value sent with the search parameter will be in the args variable         
@@ -92,9 +133,25 @@ class Query(object):
                     Q(id_project__id__iexact=id)                    
                 )
                 return Sprint.objects.filter(filter)
-            return Sprint.objects.all()
+            return Sprint.objects.all()       
 
-    # def resolve_all_backlog(self, info, **kwargs):
-    #     # We can easily optimize query count in the resolve method
-    #     return Backlog.objects.all()        
-    
+# class CustomNode(relay.Node): 
+#     class Meta:
+#         name = 'Node'
+
+#     @staticmethod
+#     def to_global_id(type, id):
+#         #returns a non-encoded ID
+#         return id
+
+#     @staticmethod
+#     def get_node_from_global_id(info, global_id, only_type=None):
+#         model = getattr(Query,info.field_name).field_type._meta.model
+#         return model.objects.get(id=global_id)
+
+# class BacklogNode(DjangoObjectType):
+#     class Meta:
+#         # Assume you have an Animal model defined with the following fields
+#         model = Backlog
+#         filter_fields = ['id_project']
+#         interfaces = (CustomNode,)        
