@@ -90,7 +90,7 @@ class CreateBacklog(graphene.Mutation):
         description = graphene.String()
 
     #3
-    def mutate(self, info, id, name):
+    def mutate(self, info, id,id_project,id_sprint,name,status,begindate,enddate,description):
         backlog = Backlog(id=id,id_project=id_project,id_sprint=id_sprint,name=name,status=status,begindate=begindate,enddate=enddate,description=description)
         backlog.save()
         return CreateBacklog(
