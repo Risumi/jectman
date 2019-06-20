@@ -2,7 +2,7 @@ import graphene
 from graphene import relay, ObjectType
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from .models import Project, Backlog, Sprint
+from .models import Project, Backlog, Sprint,User,Epic
 from graphql_relay.node.node import from_global_id
 from django.db.models import Q
 
@@ -18,6 +18,15 @@ class BacklogType(DjangoObjectType):
 class SprintType(DjangoObjectType):
     class Meta:
         model = Sprint
+
+class UserType(DjangoObjectType):
+    class Meta:
+        model = User
+
+class EpicType(DjangoObjectType):
+    class Meta:
+        model = Epic
+
 
 class CreateProject(graphene.Mutation):
     id = graphene.String()
@@ -139,19 +148,69 @@ class CreateBacklog(graphene.Mutation):
             enddate = backlog.enddate,
             description = backlog.description
         )
-#4
+
+class CreateUser(graphene.Mutation):
+    email = graphene.String()
+    nama = graphene.String()    
+    password = graphene.String()            
+    #2
+    class Arguments:
+        email = graphene.String()
+        nama = graphene.String()    
+        password = graphene.String()                
+
+    #3
+    def mutate(self, info, email,nama,password):        
+        user = User(email=email,nama=nama,password=password)        
+        user.save()
+        return CreateUser(
+            email = user.email,
+            nama = user.nama,            
+            password = user.password
+        )
+
+class CreateEpic(graphene.Mutation):
+    id = graphene.String()
+    id_project = graphene.String()    
+    name = graphene.String()            
+    description = graphene.String()            
+    status = graphene.String()            
+    #2
+    class Arguments:
+        id = graphene.String()
+        id_project = graphene.String()    
+        name = graphene.String()            
+        description = graphene.String()            
+        status = graphene.String()   
+    #3
+    def mutate(self, info, id,id_project,name,description,status):        
+        project = Project(id=id_project)
+        epic = Epic(id=id,id_project=project,name=name,description=description,status=status)        
+        epic.save()
+        return CreateEpic(
+            id = epic.id,
+            id_project = project.id,
+            name = epic.name,
+            description = epic.description,
+            status = epic.status
+        )
+
 class Mutation(graphene.ObjectType):
     create_project = CreateProject.Field()
     create_backlog = CreateBacklog.Field()
     create_backlogsprint = CreateBacklogSprint.Field()
     create_sprint = CreateSprint.Field()
+    create_user = CreateUser.Field()
+    create_epic = CreateEpic.Field()
 
 class Query(object):
-    all_project= graphene.List(ProjectType)    
+    project= graphene.List(ProjectType)    
     backlog = graphene.List(BacklogType, id=graphene.String())
-    sprint = graphene.List(SprintType, id=graphene.String())
+    sprint = graphene.List(SprintType, id=graphene.String())    
+    epic = graphene.List(EpicType, id=graphene.String())
+    user = graphene.List(UserType, email=graphene.String(), password=graphene.String())
     
-    def resolve_all_project(self, info, **kwargs):
+    def resolve_project(self, info, **kwargs):
         return Project.objects.all()
 
     def resolve_backlog(self, info, id=None, **kwargs):
@@ -171,6 +230,24 @@ class Query(object):
                 )
                 return Sprint.objects.filter(filter)
             return Sprint.objects.all()       
+
+    def resolve_epic(self, info, id=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(id_project__id__iexact=id)                    
+                )
+                return Epic.objects.filter(filter)
+            return Epic.objects.all()  
+            
+    def resolve_user(self, info, email=None, password=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(email__exact=email,password__exact=password)                    
+                )
+                return User.objects.filter(filter)
+            return User.objects.all()  
 
 # class CustomNode(relay.Node): 
 #     class Meta:

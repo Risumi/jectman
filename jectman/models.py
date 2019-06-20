@@ -23,11 +23,24 @@ class Backlog(models.Model):
         db_table = 'Backlog'
 
 
+class Epic(models.Model):
+    id = models.CharField(db_column='ID', primary_key=True, max_length=10)  # Field name made lowercase.
+    id_project = models.ForeignKey('Project', models.DO_NOTHING, db_column='ID_Project', blank=True, null=True)  # Field name made lowercase.
+    name = models.CharField(db_column='Name', max_length=32, blank=True, null=True)  # Field name made lowercase.
+    description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
+    status = models.CharField(db_column='Status', max_length=20, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Epic'
+
+
 class Project(models.Model):
     id = models.CharField(db_column='ID', primary_key=True, max_length=8)  # Field name made lowercase.
     name = models.CharField(db_column='Name', max_length=32, blank=True, null=True)  # Field name made lowercase.
     description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
     status = models.CharField(db_column='Status', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    id_user = models.ForeignKey('User', models.DO_NOTHING, db_column='ID_User', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -44,6 +57,16 @@ class Sprint(models.Model):
     class Meta:
         managed = False
         db_table = 'Sprint'
+
+
+class User(models.Model):
+    email = models.CharField(db_column='Email', primary_key=True, max_length=50)  # Field name made lowercase.
+    nama = models.CharField(db_column='Nama', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    password = models.CharField(db_column='Password', max_length=50, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'User'
 
 
 class AuthGroup(models.Model):
