@@ -43,9 +43,9 @@ INSTALLED_APPS = [
     'graphene_django',   
 ]
 
-# GRAPHENE = {
-#     'SCHEMA': 'jectman.query.schema'
-# }
+GRAPHENE = {
+    'SCHEMA': 'jectman.query.schema'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

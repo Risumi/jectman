@@ -208,7 +208,7 @@ class Query(object):
     backlog = graphene.List(BacklogType, id=graphene.String())
     sprint = graphene.List(SprintType, id=graphene.String())    
     epic = graphene.List(EpicType, id=graphene.String())
-    user = graphene.List(UserType, email=graphene.String(), password=graphene.String())
+    user = graphene.List(UserType, email=graphene.String(), password=graphene.String())    
     
     def resolve_project(self, info, **kwargs):
         return Project.objects.all()
@@ -217,7 +217,7 @@ class Query(object):
             # The value sent with the search parameter will be in the args variable         
             if id:
                 filter = (
-                    Q(id_project__id__iexact=id)                    
+                    Q(id_project__id__iexact=id , id_epic__id__iexact = id_epic)                   
                 )
                 return Backlog.objects.filter(filter)
             return Backlog.objects.all()    
@@ -248,24 +248,3 @@ class Query(object):
                 )
                 return User.objects.filter(filter)
             return User.objects.all()  
-
-# class CustomNode(relay.Node): 
-#     class Meta:
-#         name = 'Node'
-
-#     @staticmethod
-#     def to_global_id(type, id):
-#         #returns a non-encoded ID
-#         return id
-
-#     @staticmethod
-#     def get_node_from_global_id(info, global_id, only_type=None):
-#         model = getattr(Query,info.field_name).field_type._meta.model
-#         return model.objects.get(id=global_id)
-
-# class BacklogNode(DjangoObjectType):
-#     class Meta:
-#         # Assume you have an Animal model defined with the following fields
-#         model = Backlog
-#         filter_fields = ['id_project']
-#         interfaces = (CustomNode,)        
