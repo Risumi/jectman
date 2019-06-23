@@ -83,6 +83,7 @@ class CreateBacklogSprint(graphene.Mutation):
     id = graphene.String()
     id_project = graphene.String()
     id_sprint = graphene.String()
+    id_epic = graphene.String()
     name = graphene.String()        
     status = graphene.String()
     begindate = graphene.Date()
@@ -93,6 +94,7 @@ class CreateBacklogSprint(graphene.Mutation):
         id = graphene.String()
         id_project = graphene.String()
         id_sprint = graphene.String() 
+        id_epic = graphene.String()
         name = graphene.String()        
         status = graphene.String()
         begindate = graphene.Date()
@@ -100,15 +102,17 @@ class CreateBacklogSprint(graphene.Mutation):
         description = graphene.String()
 
     #3
-    def mutate(self, info, id,id_project,id_sprint,name,status,begindate,enddate,description):
+    def mutate(self, info, id,id_project,id_sprint,id_epic,name,status,begindate,enddate,description):
         project = Project(id=id_project)
         sprint = Sprint(id=id_sprint)
-        backlog = Backlog(id=id,id_project=project,id_sprint=id_sprint,name=name,status=status,begindate=begindate,enddate=enddate,description=description)        
+        epic = Epic(id=id_epic)
+        backlog = Backlog(id=id,id_project=project,id_sprint=id_sprint,id_epic=id_epic,name=name,status=status,begindate=begindate,enddate=enddate,description=description)        
         backlog.save()
         return CreateBacklog(
             id = backlog.id,
             id_project = project.id,
             id_sprint = sprint.id,
+            id_epic = epic.id,
             name = backlog.name,
             status = backlog.status,
             begindate = backlog.begindate,
@@ -119,6 +123,7 @@ class CreateBacklogSprint(graphene.Mutation):
 class CreateBacklog(graphene.Mutation):
     id = graphene.String()
     id_project = graphene.String()    
+    id_epic = graphene.String()
     name = graphene.String()        
     status = graphene.String()
     begindate = graphene.Date()
@@ -128,6 +133,7 @@ class CreateBacklog(graphene.Mutation):
     class Arguments:
         id = graphene.String()
         id_project = graphene.String()        
+        id_epic = graphene.String()
         name = graphene.String()        
         status = graphene.String()
         begindate = graphene.Date()
@@ -135,13 +141,15 @@ class CreateBacklog(graphene.Mutation):
         description = graphene.String()
 
     #3
-    def mutate(self, info, id,id_project,name,status,begindate,enddate,description):
+    def mutate(self, info, id,id_project,id_epic,name,status,begindate,enddate,description):
         project = Project(id=id_project)        
-        backlog = Backlog(id=id,id_project=project,name=name,status=status,begindate=begindate,enddate=enddate,description=description)        
+        epic = Epic(id=id_epic)
+        backlog = Backlog(id=id,id_project=project,id_epic=id_epic,name=name,status=status,begindate=begindate,enddate=enddate,description=description)        
         backlog.save()
         return CreateBacklog(
             id = backlog.id,
-            id_project = project.id,            
+            id_project = project.id,  
+            id_epic = epic.id,
             name = backlog.name,
             status = backlog.status,
             begindate = backlog.begindate,
