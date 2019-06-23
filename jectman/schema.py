@@ -205,7 +205,7 @@ class Mutation(graphene.ObjectType):
 
 class Query(object):
     project= graphene.List(ProjectType)    
-    backlog = graphene.List(BacklogType, id=graphene.String())
+    backlog = graphene.List(BacklogType, id=graphene.String(),id_epic=graphene.String())
     sprint = graphene.List(SprintType, id=graphene.String())    
     epic = graphene.List(EpicType, id=graphene.String())
     user = graphene.List(UserType, email=graphene.String(), password=graphene.String())    
