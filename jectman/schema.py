@@ -213,7 +213,8 @@ class Mutation(graphene.ObjectType):
 
 class Query(object):
     project= graphene.List(ProjectType)    
-    backlog = graphene.List(BacklogType, id=graphene.String(),id_epic=graphene.String())
+    backlog = graphene.List(BacklogType, id=graphene.String())
+    backlogE=graphene.List(BacklogType,id_epic=graphene.String())
     sprint = graphene.List(SprintType, id=graphene.String())    
     epic = graphene.List(EpicType, id=graphene.String())
     user = graphene.List(UserType, email=graphene.String(), password=graphene.String())    
@@ -221,11 +222,21 @@ class Query(object):
     def resolve_project(self, info, **kwargs):
         return Project.objects.all()
 
-    def resolve_backlog(self, info, id=None,id_epic=None, **kwargs):
+    def resolve_backlog(self, info, id=None, **kwargs):
             # The value sent with the search parameter will be in the args variable         
             if id:
                 filter = (
-                    Q(id_project__id__iexact=id , id_epic__id__iexact = id_epic)                   
+                    Q(id_project__id__iexact=id )                   
+                )
+                return Backlog.objects.filter(filter)
+            return Backlog.objects.all()    
+    
+
+    def resolve_backlogE(self, info, id_epic=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q( id_epic__id__iexact = id_epic)                   
                 )
                 return Backlog.objects.filter(filter)
             return Backlog.objects.all()    
