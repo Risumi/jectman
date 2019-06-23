@@ -213,7 +213,7 @@ class Query(object):
     def resolve_project(self, info, **kwargs):
         return Project.objects.all()
 
-    def resolve_backlog(self, info, id=None, **kwargs):
+    def resolve_backlog(self, info, id=None,id_epic=None, **kwargs):
             # The value sent with the search parameter will be in the args variable         
             if id:
                 filter = (
