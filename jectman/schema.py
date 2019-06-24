@@ -108,10 +108,51 @@ class CreateBacklogSprint(graphene.Mutation):
         epic = Epic(id=id_epic)
         backlog = Backlog(id=id,id_project=project,id_sprint=sprint,id_epic=epic,name=name,status=status,begindate=begindate,enddate=enddate,description=description)        
         backlog.save()
-        return CreateBacklogSprint(
+        return CreateBacklog(
             id = backlog.id,
             id_project = project.id,
             id_sprint = sprint.id,
+            id_epic = epic.id,
+            name = backlog.name,
+            status = backlog.status,
+            begindate = backlog.begindate,
+            enddate = backlog.enddate,
+            description = backlog.description
+        )
+
+class CreateBacklogSprintNull(graphene.Mutation):
+    id = graphene.String()
+    id_project = graphene.String()
+    # id_sprint = graphene.String()
+    id_epic = graphene.String()
+    name = graphene.String()        
+    status = graphene.String()
+    begindate = graphene.Date()
+    enddate = graphene.Date()
+    description = graphene.String()
+    #2
+    class Arguments:
+        id = graphene.String()
+        id_project = graphene.String()
+        # id_sprint = graphene.String() 
+        id_epic = graphene.String()
+        name = graphene.String()        
+        status = graphene.String()
+        begindate = graphene.Date()
+        enddate = graphene.Date()
+        description = graphene.String()
+
+    #3
+    def mutate(self, info, id,id_project,id_epic,name,status,begindate,enddate,description):
+        project = Project(id=id_project)
+        sprint = None
+        epic = Epic(id=id_epic)
+        backlog = Backlog(id=id,id_project=project,id_sprint=sprint,id_epic=epic,name=name,status=status,begindate=begindate,enddate=enddate,description=description)        
+        backlog.save()
+        return CreateBacklogSprintNull(
+            id = backlog.id,
+            id_project = project.id,
+            # id_sprint = sprint,
             id_epic = epic.id,
             name = backlog.name,
             status = backlog.status,
@@ -207,6 +248,7 @@ class Mutation(graphene.ObjectType):
     create_project = CreateProject.Field()
     create_backlog = CreateBacklog.Field()
     create_backlogsprint = CreateBacklogSprint.Field()
+    create_backlogsprintnull = CreateBacklogSprintNull.Field()
     create_sprint = CreateSprint.Field()
     create_user = CreateUser.Field()
     create_epic = CreateEpic.Field()
