@@ -108,7 +108,7 @@ class CreateBacklogSprint(graphene.Mutation):
         epic = Epic(id=id_epic)
         backlog = Backlog(id=id,id_project=project,id_sprint=sprint,id_epic=epic,name=name,status=status,begindate=begindate,enddate=enddate,description=description)        
         backlog.save()
-        return CreateBacklog(
+        return CreateBacklogSprint(
             id = backlog.id,
             id_project = project.id,
             id_sprint = sprint.id,
