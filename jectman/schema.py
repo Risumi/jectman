@@ -28,6 +28,11 @@ class EpicType(DjangoObjectType):
         model = Epic
 
 
+class ProgressType(graphene.ObjectType):
+    id = graphene.String()
+    complete = graphene.Int()
+    count = graphene.Int()
+
 class CreateProject(graphene.Mutation):
     id = graphene.String()
     name = graphene.String()    
@@ -244,6 +249,37 @@ class CreateEpic(graphene.Mutation):
             status = epic.status
         )
 
+class DeleteBacklog(graphene.Mutation):
+    id = graphene.String()         
+    #2
+    class Arguments:
+        id = graphene.String()
+ 
+    #3
+    def mutate(self, info, id):        
+        backlog = Backlog(id=id)     
+        test = id   
+        backlog.delete()
+        return DeleteBacklog(
+            id = test,
+        )
+
+class DeleteEpic(graphene.Mutation):
+    id = graphene.String()         
+    #2
+    class Arguments:
+        id = graphene.String()
+ 
+    #3
+    def mutate(self, info, id):        
+        epic = Epic(id=id)     
+        test = id   
+        epic.delete()
+        return DeleteEpic(
+            id = test,
+        )
+
+
 class Mutation(graphene.ObjectType):
     create_project = CreateProject.Field()
     create_backlog = CreateBacklog.Field()
@@ -252,6 +288,8 @@ class Mutation(graphene.ObjectType):
     create_sprint = CreateSprint.Field()
     create_user = CreateUser.Field()
     create_epic = CreateEpic.Field()
+    delete_backlog = DeleteBacklog.Field()
+    delete_epic = DeleteEpic.Field()
 
 class Query(object):
     project= graphene.List(ProjectType)    
@@ -260,6 +298,21 @@ class Query(object):
     sprint = graphene.List(SprintType, id=graphene.String())    
     epic = graphene.List(EpicType, id=graphene.String())
     user = graphene.List(UserType, email=graphene.String(), password=graphene.String())    
+    progress = graphene.List(ProgressType)
+
+    def resolve_progress(self, info, **kwargs):                
+        id = Project.objects.values_list('id', flat=True)
+        progress = []
+        
+        for i in id:      
+            p = ProgressType()   
+            p.id = i
+            p.complete = Backlog.objects.filter(id_project__id__iexact=i,status__icontains='Completed').count()
+            p.count = Backlog.objects.filter(id_project__id__iexact=i).count() 
+            progress.append(p)
+        # a = Progress
+        # a.id ="a" 
+        return progress
     
     def resolve_project(self, info, **kwargs):
         return Project.objects.all()
