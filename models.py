@@ -13,12 +13,14 @@ class Backlog(models.Model):
     id_project = models.ForeignKey('Project', models.DO_NOTHING, db_column='ID_Project', blank=True, null=True)  # Field name made lowercase.
     name = models.CharField(db_column='Name', max_length=32, blank=True, null=True)  # Field name made lowercase.
     status = models.CharField(db_column='Status', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    begindate = models.DateField(db_column='BeginDate', blank=True, null=True)  # Field name made lowercase.
-    enddate = models.DateField(db_column='EndDate', blank=True, null=True)  # Field name made lowercase.
+    createddate = models.DateField(db_column='CreatedDate', blank=True, null=True)  # Field name made lowercase.
+    modifieddate = models.DateField(db_column='ModifiedDate', blank=True, null=True)  # Field name made lowercase.
     description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
     id_sprint = models.ForeignKey('Sprint', models.DO_NOTHING, db_column='ID_Sprint', blank=True, null=True)  # Field name made lowercase.
-    id_user = models.ForeignKey('User', models.DO_NOTHING, db_column='ID_User', blank=True, null=True)  # Field name made lowercase.
+    assignee = models.ForeignKey('User', models.DO_NOTHING, db_column='Assignee', blank=True, null=True)  # Field name made lowercase.
     id_epic = models.ForeignKey('Epic', models.DO_NOTHING, db_column='ID_Epic', blank=True, null=True)  # Field name made lowercase.
+    createdby = models.ForeignKey('User', models.DO_NOTHING, db_column='CreatedBy', blank=True, null=True)  # Field name made lowercase.
+    modifiedby = models.ForeignKey('User', models.DO_NOTHING, db_column='ModifiedBy', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -29,8 +31,11 @@ class Epic(models.Model):
     id = models.CharField(db_column='ID', primary_key=True, max_length=10)  # Field name made lowercase.
     id_project = models.ForeignKey('Project', models.DO_NOTHING, db_column='ID_Project', blank=True, null=True)  # Field name made lowercase.
     name = models.CharField(db_column='Name', max_length=32, blank=True, null=True)  # Field name made lowercase.
-    description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
-    status = models.CharField(db_column='Status', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    summary = models.TextField(db_column='Summary', blank=True, null=True)  # Field name made lowercase.
+    createddate = models.DateField(db_column='CreatedDate', blank=True, null=True)  # Field name made lowercase.
+    modifieddate = models.DateField(db_column='ModifiedDate', blank=True, null=True)  # Field name made lowercase.
+    createdby = models.ForeignKey('User', models.DO_NOTHING, db_column='CreatedBy', blank=True, null=True)  # Field name made lowercase.
+    modifiedby = models.ForeignKey('User', models.DO_NOTHING, db_column='ModifiedBy', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -55,10 +60,25 @@ class Sprint(models.Model):
     begindate = models.DateField(db_column='BeginDate', blank=True, null=True)  # Field name made lowercase.
     enddate = models.DateField(db_column='EndDate', blank=True, null=True)  # Field name made lowercase.
     goal = models.TextField(db_column='Goal', blank=True, null=True)  # Field name made lowercase.
+    name = models.CharField(db_column='Name', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    createddate = models.DateField(db_column='CreatedDate', blank=True, null=True)  # Field name made lowercase.
+    modifieddate = models.DateField(db_column='ModifiedDate', blank=True, null=True)  # Field name made lowercase.
+    createdby = models.ForeignKey('User', models.DO_NOTHING, db_column='CreatedBy', blank=True, null=True)  # Field name made lowercase.
+    modifiedby = models.ForeignKey('User', models.DO_NOTHING, db_column='ModifiedBy', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'Sprint'
+
+
+class Sprintreport(models.Model):
+    id_sprint = models.ForeignKey(Sprint, models.DO_NOTHING, db_column='ID_Sprint', blank=True, null=True)  # Field name made lowercase.
+    date = models.DateField(db_column='Date', blank=True, null=True)  # Field name made lowercase.
+    completedbacklog = models.IntegerField(db_column='CompletedBacklog', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'SprintReport'
 
 
 class User(models.Model):
@@ -69,6 +89,15 @@ class User(models.Model):
     class Meta:
         managed = False
         db_table = 'User'
+
+
+class Userproject(models.Model):
+    email = models.ForeignKey(User, models.DO_NOTHING, db_column='Email', blank=True, null=True)  # Field name made lowercase.
+    id_project = models.ForeignKey(Project, models.DO_NOTHING, db_column='ID_Project', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'UserProject'
 
 
 class AuthGroup(models.Model):
