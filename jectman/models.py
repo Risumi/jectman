@@ -65,6 +65,8 @@ class Sprint(models.Model):
     modifieddate = models.DateField(db_column='ModifiedDate', blank=True, null=True)  # Field name made lowercase.
     createdby = models.ForeignKey('User', models.DO_NOTHING, db_column='CreatedBy', blank=True, null=True,related_name='createdbys')  # Field name made lowercase.
     modifiedby = models.ForeignKey('User', models.DO_NOTHING, db_column='ModifiedBy', blank=True, null=True,related_name='modifiedbys')  # Field name made lowercase.
+    status = models.CharField(db_column='Status', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    retrospective = models.TextField(db_column='Retrospective', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -85,6 +87,7 @@ class User(models.Model):
     email = models.CharField(db_column='Email', primary_key=True, max_length=50)  # Field name made lowercase.
     nama = models.CharField(db_column='Nama', max_length=50, blank=True, null=True)  # Field name made lowercase.
     password = models.CharField(db_column='Password', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    role = models.CharField(db_column='Role', max_length=20, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

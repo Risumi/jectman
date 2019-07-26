@@ -61,6 +61,7 @@ class CreateSprint(graphene.Mutation):
     name = graphene.String()
     id_project = graphene.String()    
     goal = graphene.String()
+    status = graphene.String()
     createddate = graphene.Date()
     createdby = graphene.String()
     #2
@@ -69,14 +70,15 @@ class CreateSprint(graphene.Mutation):
         name = graphene.String()
         id_project = graphene.String()    
         goal = graphene.String()
+        status = graphene.String()
         createddate = graphene.Date()
         createdby = graphene.String()
 
     #3
-    def mutate(self, info, id,name, id_project,goal,createddate,createdby):
+    def mutate(self, info, id,name, id_project,goal,status,createddate,createdby):
         project = Project(id=id_project)
         createby = User(email=createdby) 
-        sprint = Sprint(id=id,name=name, id_project=project,goal=goal,createddate=createddate,createdby=createby)
+        sprint = Sprint(id=id,name=name, id_project=project,goal=goal,status=status,createddate=createddate,createdby=createby)
         sprint.save()
 
         return CreateSprint(
@@ -84,6 +86,7 @@ class CreateSprint(graphene.Mutation):
             name = sprint.name,
             id_project = project.id,            
             goal = sprint.goal,
+            status= sprint.status,
             createddate = sprint.createddate,
             createdby  = createby.email                               
         )
@@ -94,6 +97,8 @@ class EditSprint(graphene.Mutation):
     begindate = graphene.Date()
     enddate = graphene.Date()
     goal = graphene.String()
+    status = graphene.String()
+    retrospective = graphene.String()
     modifieddate = graphene.Date()
     modifiedby = graphene.String()
     #2
@@ -103,14 +108,16 @@ class EditSprint(graphene.Mutation):
         begindate = graphene.Date()
         enddate = graphene.Date()
         goal = graphene.String()
+        status = graphene.String()
+        retrospective = graphene.String()
         modifieddate = graphene.Date()
         modifiedby = graphene.String() 
 
     #3
-    def mutate(self, info, id,name,begindate,enddate,goal,modifieddate,modifiedby):        
+    def mutate(self, info, id,name,begindate,enddate,goal,status,retrospective,modifieddate,modifiedby):        
         modifby = User(email=modifiedby)        
-        sprint = Sprint(id=id,name=name,begindate=begindate,enddate=enddate,goal=goal,modifieddate=modifieddate,modifiedby=modifby)
-        Sprint.objects.filter(id=id).update(name=name,begindate=begindate,enddate=enddate,goal=goal,modifieddate=modifieddate,modifiedby=modifby)                
+        sprint = Sprint(id=id,name=name,begindate=begindate,enddate=enddate,goal=goal,status=status,retrospective=retrospective,modifieddate=modifieddate,modifiedby=modifby)
+        Sprint.objects.filter(id=id).update(name=name,begindate=begindate,enddate=enddate,goal=goal,status=status,retrospective=retrospective,modifieddate=modifieddate,modifiedby=modifby)
 
         return EditSprint(
             id = sprint.id,            
@@ -118,6 +125,8 @@ class EditSprint(graphene.Mutation):
             begindate = sprint.begindate,
             enddate = sprint.enddate,
             goal = sprint.goal,
+            status= sprint.status,
+            retrospective = sprint.retrospective,
             modifieddate = sprint.modifieddate,
             modifiedby = modifby.email            
         )
@@ -235,21 +244,24 @@ class EditBacklog(graphene.Mutation):
 class CreateUser(graphene.Mutation):
     email = graphene.String()
     nama = graphene.String()    
-    password = graphene.String()            
+    password = graphene.String()
+    role = graphene.String()            
     #2
     class Arguments:
         email = graphene.String()
         nama = graphene.String()    
         password = graphene.String()                
+        role = graphene.String()            
 
     #3
-    def mutate(self, info, email,nama,password):        
-        user = User(email=email,nama=nama,password=password)        
+    def mutate(self, info, email,nama,password,role):        
+        user = User(email=email,nama=nama,password=password,role=role)        
         user.save()
         return CreateUser(
             email = user.email,
             nama = user.nama,            
-            password = user.password
+            password = user.password,
+            role = user.role
         )
 
 class CreateEpic(graphene.Mutation):
@@ -342,7 +354,20 @@ class DeleteEpic(graphene.Mutation):
             id = test,
         )
 
-
+class DeleteProject(graphene.Mutation):
+    id = graphene.String()         
+    #2
+    class Arguments:
+        id = graphene.String()
+ 
+    #3
+    def mutate(self, info, id):        
+        project = Project(id=id)     
+        test = id   
+        project.delete()
+        return DeleteProject(
+            id = test,
+        )
 class Mutation(graphene.ObjectType):
     create_project = CreateProject.Field()
     create_backlog = CreateBacklog.Field()
@@ -354,6 +379,7 @@ class Mutation(graphene.ObjectType):
     edit_epic = EditEpic.Field()
     delete_backlog = DeleteBacklog.Field()
     delete_epic = DeleteEpic.Field()
+    delete_project = DeleteProject.Field()
 
 class Query(object):
     project= graphene.List(ProjectType)    
