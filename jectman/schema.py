@@ -2,7 +2,7 @@ import graphene
 from graphene import relay, ObjectType
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from .models import Project, Backlog, Sprint,User,Epic
+from .models import Project, Backlog, Sprint,User,Epic,Userproject
 from graphql_relay.node.node import from_global_id
 from django.db.models import Q
 
@@ -33,22 +33,31 @@ class ProgressType(graphene.ObjectType):
     complete = graphene.Int()
     count = graphene.Int()
 
+class UserprojectType(DjangoObjectType):
+    class Meta:
+        model = Userproject
+
+# nambah project
 class CreateProject(graphene.Mutation):
     id = graphene.String()
     name = graphene.String()    
     description = graphene.String()
     status = graphene.String()
+    email = graphene.String()
     #2
     class Arguments:
         id = graphene.String()
         name = graphene.String()
         description = graphene.String()
-        status = graphene.String()    
-
+        status = graphene.String()            
+        email = graphene.String()
     #3
-    def mutate(self, info, id, name,description,status):
+    def mutate(self, info, id, name,description,status,email):
         project = Project(id=id, name=name,description=description,status=status)
         project.save()
+        user = User(email=email)
+        userproject = Userproject(id_project=project,email=user)
+        userproject.save()
 
         return CreateProject(
             id=project.id,
@@ -368,6 +377,82 @@ class DeleteProject(graphene.Mutation):
         return DeleteProject(
             id = test,
         )
+
+class DeleteProject(graphene.Mutation):
+    id = graphene.String()         
+    #2
+    class Arguments:
+        id = graphene.String()
+ 
+    #3
+    def mutate(self, info, id):        
+        project = Project(id=id)     
+        test = id   
+        project.delete()
+        return DeleteProject(
+            id = test,
+        )
+
+class DeleteUser(graphene.Mutation):
+    email = graphene.String()         
+    #2
+    class Arguments:
+        email  = graphene.String()
+ 
+    #3
+    def mutate(self, info, email):        
+        user = User(email=email)     
+        test = email   
+        user.delete()
+        return DeleteUser(
+            email = test,
+        )
+
+# delete user tim
+class DeleteUserProject(graphene.Mutation):
+    id_project = graphene.String()         
+    email = graphene.String()
+    #2
+    class Arguments:
+        id_project = graphene.String()         
+        email = graphene.String()
+ 
+    #3
+    def mutate(self, info, id_project,email):        
+        user = User(email=email)
+        project = Project(id=id_project)
+        userproject = Userproject.objects.filter(email=user,id_project=project)     
+        # test = email
+        userproject.delete()
+        return DeleteUserProject(
+            id_project = project.id,
+            email = user.email,
+        )
+
+# nambah user tim
+class AddUser(graphene.Mutation):
+    id_project = graphene.String()         
+    email = graphene.String()
+    name = graphene.String()
+    #2
+    class Arguments:
+        id_project = graphene.String()         
+        email = graphene.String()
+        name = graphene.String()
+
+    
+    def mutate(self, info, id_project,email):        
+        user = User.objects.filter(email=email)[0]
+        project = Project(id=id_project)
+        userproject = Userproject(email=user,id_project=project)     
+        # test = email
+        userproject.save()
+        return AddUser(
+            id_project = project.id,
+            email = user.email,
+            name = user.nama
+        )       
+
 class Mutation(graphene.ObjectType):
     create_project = CreateProject.Field()
     create_backlog = CreateBacklog.Field()
@@ -376,10 +461,13 @@ class Mutation(graphene.ObjectType):
     edit_sprint = EditSprint.Field()
     create_user = CreateUser.Field()
     create_epic = CreateEpic.Field()
+    add_user = AddUser.Field()
     edit_epic = EditEpic.Field()
     delete_backlog = DeleteBacklog.Field()
     delete_epic = DeleteEpic.Field()
     delete_project = DeleteProject.Field()
+    delete_userproject = DeleteUserProject.Field()
+    delete_user = DeleteUser.Field()
 
 class Query(object):
     project= graphene.List(ProjectType)    
@@ -389,6 +477,8 @@ class Query(object):
     epic = graphene.List(EpicType, id=graphene.String())
     user = graphene.List(UserType, email=graphene.String(), password=graphene.String())    
     progress = graphene.List(ProgressType)
+    userproject = graphene.List(UserprojectType, id=graphene.String())
+    projectuser = graphene.List(UserprojectType, id=graphene.String())
 
     def resolve_progress(self, info, **kwargs):                
         id = Project.objects.values_list('id', flat=True)
@@ -452,3 +542,23 @@ class Query(object):
                 )
                 return User.objects.filter(filter)
             return User.objects.all()  
+
+# tim
+    def resolve_userproject(self, info, id=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(id_project__exact=id)                    
+                )
+                return Userproject.objects.filter(filter)
+            return Userproject.objects.all()  
+
+# activity home
+    def resolve_projectuser(self, info, id=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(email__exact=id)                    
+                )
+                return Userproject.objects.filter(filter)
+            return Userproject.objects.all()  
