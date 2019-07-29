@@ -1,5 +1,5 @@
 import graphene
-from graphene import relay, ObjectType
+from graphene import relay, ObjectType,InputObjectType
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from .models import Project, Backlog, Sprint,User,Epic,Userproject
@@ -36,6 +36,10 @@ class ProgressType(graphene.ObjectType):
 class UserprojectType(DjangoObjectType):
     class Meta:
         model = Userproject
+
+class BacklogInput(graphene.InputObjectType):
+    id = graphene.String()
+    status = graphene.String()
 
 # nambah project
 class CreateProject(graphene.Mutation):
@@ -453,8 +457,46 @@ class AddUser(graphene.Mutation):
             name = user.nama
         )       
 
+class EditProject(graphene.Mutation):
+    id = graphene.String()
+    name = graphene.String()            
+    description = graphene.String()            
+    status = graphene.String()                
+    #2
+    class Arguments:
+        id = graphene.String()
+        name = graphene.String()            
+        description = graphene.String()            
+        status = graphene.String()            
+    #3
+    def mutate(self, info, id,name,description,status):                       
+        project = Project(id=id,name=name,description=description,status=status)  
+        Project.objects.filter(id=id).update(name=name,description=description,status=status)          
+        return EditProject(
+            id = project.id,            
+            name = project.name,
+            description = project.description,
+            status = project.status            
+        )
+
+class SetStatus(graphene.Mutation):
+    
+    ok = graphene.Boolean()
+    # class Input:
+    #     backlog = graphene.List(BacklogInput)          
+    #2
+    class Arguments:
+        backlog = graphene.List(BacklogInput)        
+    # #3
+    def mutate(self, info, id,backlog):    
+        ok = True
+        return SetStatus(
+            ok = ok
+        )
+
 class Mutation(graphene.ObjectType):
     create_project = CreateProject.Field()
+    edit_project = EditProject.Field()
     create_backlog = CreateBacklog.Field()
     edit_backlog = EditBacklog.Field()    
     create_sprint = CreateSprint.Field()
@@ -468,6 +510,7 @@ class Mutation(graphene.ObjectType):
     delete_project = DeleteProject.Field()
     delete_userproject = DeleteUserProject.Field()
     delete_user = DeleteUser.Field()
+    set_status = SetStatus.Field()
 
 class Query(object):
     project= graphene.List(ProjectType)    
