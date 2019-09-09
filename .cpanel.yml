@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/risumion/repositories/jectman
+    - export DEPLOYPATH=/home/risumion/public_html
     - /bin/cp -r * $DEPLOYPATH
