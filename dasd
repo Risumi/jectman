@@ -1,0 +1,189 @@
+[33mcommit 890222c072629c4e2db235fad1d335efb8c12919[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Sep 9 16:42:22 2019 +0700
+
+    test
+
+[33mcommit e53fe8bc475a0fd089a14cb01ede3f7f81093d50[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Sep 9 16:31:16 2019 +0700
+
+    test
+
+[33mcommit 2bc87ada8d63aa121e6280526af815a9ae4de521[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Sep 9 15:51:27 2019 +0700
+
+    test
+
+[33mcommit 19cc15b55bf2cc18b1a09f22f6552ccc49d8ee93[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Jul 29 21:18:44 2019 +0700
+
+    initial setstatus and edit project
+
+[33mcommit 465a6c13512aa06e61433251cf71fe2e389808bb[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jul 28 03:41:52 2019 +0700
+
+    added user integration
+
+[33mcommit 5e648704e37619c4a979cb84a29d12fa60310574[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sat Jul 27 01:46:10 2019 +0700
+
+    added role, sprint status, and sprint retrospective
+
+[33mcommit 3e4d9da09b88cf825fa036c77127b513466ed099[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jul 21 23:35:32 2019 +0700
+
+    major revision scheme
+
+[33mcommit daae7949753731bf7ec62adf13251f8b8b6b4535[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Jul 15 00:16:02 2019 +0700
+
+    added project percentage
+
+[33mcommit 09e18a43d37e7688eb4c3eb9df55ce1f42218b93[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Jun 24 18:17:09 2019 +0700
+
+    minor fix
+
+[33mcommit bac5b826f969c344bf3e2f55a035a3e2f13d8de5[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Jun 24 17:50:59 2019 +0700
+
+    minor improvement
+
+[33mcommit 60cdb54b403721ae5cdea79c7d4ec779144cea4e[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Jun 24 16:41:18 2019 +0700
+
+    minor typo
+
+[33mcommit e46baa99aa53feeb1b2b0dc22959f4fe0ec27891[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jun 23 23:08:16 2019 +0700
+
+    fixed
+
+[33mcommit df89d9db73bf9c7c316769fc01bbcc39a459ae86[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jun 23 22:05:25 2019 +0700
+
+    fix
+
+[33mcommit 42bb289588594449759e1a19c96b78886cc414f1[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jun 23 21:02:22 2019 +0700
+
+    minor fixes
+
+[33mcommit f415f8ab7268908248600dfaeefbfe9bae1836e9[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jun 23 15:13:05 2019 +0700
+
+[33mcommit aa30bf23d22047ea8f242c8d03e8de02b516fe71[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jun 23 15:10:51 2019 +0700
+
+    minor fix
+
+[33mcommit 0a4052170b7c40970331d4cee2b35516c9f3b6e5[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Jun 23 14:27:07 2019 +0700
+
+    added id_epic to backlog api
+
+[33mcommit a4dda2ee4a1bbb90954b6cdf3698b1045a335b81[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Jun 21 01:21:38 2019 +0700
+
+    minor fix
+
+[33mcommit 09331ff11698d137b003e1c27a7f236a51411230[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Jun 21 00:49:43 2019 +0700
+
+    added epic and user
+
+[33mcommit 704cac929dbe29dff8f354ae46ee16f8552e160e[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Thu Apr 18 23:48:24 2019 +0700
+
+    added sprint and bug fix
+
+[33mcommit af7a86b641555d74f4b28380ef8fc907c3f77b52[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Thu Apr 18 22:45:10 2019 +0700
+
+    minor fix
+
+[33mcommit 39bf47e1946220988152747308f434c421d5dfc6[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Thu Apr 18 00:16:13 2019 +0700
+
+    added mutation and register sprint to admin
+
+[33mcommit 23d5ae0509d4dee7f3dabe2bc3c778f234ac6ec8[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Apr 15 00:31:42 2019 +0700
+
+    added csrf
+
+[33mcommit 32bed894002eed1d4ad1d08c96f83fcb7fef909a[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Sun Apr 14 19:11:38 2019 +0700
+
+    added graphql and sprint model
+
+[33mcommit 6a269af0ede1eb1df7c3159f36a5e638195cd846[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Apr 1 01:00:36 2019 +0700
+
+    added requirement
+
+[33mcommit 10c7245e256e08e3bf6589466cbdc7d9dcd6510b[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Mon Apr 1 00:55:25 2019 +0700
+
+    endpoint backlog, project added
+
+[33mcommit f36f818e8d6bce4466980ba26ec0f09edfe30c9c[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Mar 29 21:45:47 2019 +0700
+
+    Initial commit
+
+[33mcommit 2f2b7a01042779d26231cef7cb852242778e8f1c[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Mar 29 21:43:54 2019 +0700
+
+    Initial commit
+
+[33mcommit 6577efda80b095704887e46445f6e0b1bf332685[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Mar 29 21:37:36 2019 +0700
+
+    Initial commit
+
+[33mcommit 3c4dad0c92f1a92d9b88784d115c2f953bda8f42[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Mar 29 21:26:31 2019 +0700
+
+    Initial commit
+
+[33mcommit adf34bb4a710f8fab87f1ac27c00bfcab029061a[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Mar 29 20:59:46 2019 +0700
+
+    Initial commit
+
+[33mcommit b15088238e78bd8c14e5e1b90a3d7acbc05efeee[m
+Author: Risumi <rizkysuhaimi@gmail.com>
+Date:   Fri Mar 29 20:47:59 2019 +0700
+
+    Initial commit

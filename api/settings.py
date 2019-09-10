@@ -87,10 +87,10 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd199lcoehnucif',                      
-        'USER': 'iusxonpotgobkd',
-        'PASSWORD': '15582e08a19d4c32a5f3858b17d4d223e45f906f3178aa013b889fd3abef6c1b',
-        'HOST': 'ec2-54-83-61-142.compute-1.amazonaws.com',
+        'NAME': 'risumion_jectman',                      
+        'USER': 'risumion',
+        'PASSWORD': 'realmadrid21',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
