@@ -2,7 +2,7 @@ import graphene
 from graphene import relay, ObjectType,InputObjectType
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from .models import Project, Backlog, Sprint,User,Epic,Userproject
+from .models import Project, Backlog, Sprint,User,Epic,Userproject, BacklogSprint
 from graphql_relay.node.node import from_global_id
 from django.db.models import Q
 
@@ -38,8 +38,24 @@ class UserprojectType(DjangoObjectType):
         model = Userproject
 
 class BacklogInput(graphene.InputObjectType):
-    id = graphene.String()
+    idBacklog = graphene.String()
+    idSprint = graphene.String()
     status = graphene.String()
+    date = graphene.Date()
+    
+class SprintInput(graphene.InputObjectType):
+    id = graphene.String()
+    id_project = graphene.String()
+    begindate = graphene.Date()
+    enddate = graphene.Date()
+    goal = graphene.String()
+    name = graphene.String()
+    createddate = graphene.Date()
+    modifieddate = graphene.Date()
+    createdby = graphene.String()
+    modifiedby = graphene.String()
+    status = graphene.String()
+    retrospective = graphene.String()
 
 # nambah project
 class CreateProject(graphene.Mutation):
@@ -482,16 +498,57 @@ class EditProject(graphene.Mutation):
 class SetStatus(graphene.Mutation):
     
     ok = graphene.Boolean()
-    # class Input:
-    #     backlog = graphene.List(BacklogInput)          
-    #2
+    
     class Arguments:
         backlog = graphene.List(BacklogInput)        
+        modifiedby = graphene.String()
     # #3
-    def mutate(self, info, id,backlog):    
-        ok = True
+    def mutate(self, info, backlog,modifiedby):    
+        ok = True        
+        for listBacklog in backlog:
+            Backlog.objects.filter(id = listBacklog.idBacklog).update(status = listBacklog.status,modifiedby = modifiedby,modifieddate = listBacklog.date )
+            objek = Backlog(id=listBacklog.idBacklog)
+            sprint = Sprint(id=listBacklog.idSprint)
+            objek2 = BacklogSprint(id_backlog=objek,id_sprint=sprint,status=listBacklog.status,date=listBacklog.date)  
+            objek2.save()            
         return SetStatus(
             ok = ok
+        )
+
+class CreateSprintO(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    #2
+    class Arguments:
+        sprint = SprintInput()
+
+    #3
+    def mutate(self, info, sprint):
+        ok = True
+        project = Project(id=sprint.id_project)
+        createby = User(email=sprint.createdby) 
+        sprint = Sprint(id=sprint.id,name=sprint.name, id_project=sprint.id_project,goal=sprint.goal,status=sprint.status,createddate=sprint.createddate,createdby=sprint.createdby)
+        sprint.save()
+
+        return CreateSprintO(
+            ok=ok                            
+        )
+
+class EditSprintO(graphene.Mutation):
+    ok = graphene.Boolean()
+
+    #2
+    class Arguments:
+        sprint = SprintInput()
+
+
+    #3
+    def mutate(self, info, sprint):        
+        modifby = User(email=sprint.modifiedby)                
+        Sprint.objects.filter(id=sprint.id).update(name=sprint.name,begindate=sprint.begindate,enddate=sprint.enddate,goal=sprint.goal,status=sprint.status,retrospective=sprint.retrospective,modifieddate=sprint.modifieddate,modifiedby=sprint.modifiedby)
+        ok = True
+        return EditSprintO(
+            ok = ok     
         )
 
 class Mutation(graphene.ObjectType):
@@ -511,6 +568,8 @@ class Mutation(graphene.ObjectType):
     delete_userproject = DeleteUserProject.Field()
     delete_user = DeleteUser.Field()
     set_status = SetStatus.Field()
+    create_sprint_o = CreateSprintO.Field()
+    edit_sprint_o = EditSprintO.Field()
 
 class Query(object):
     project= graphene.List(ProjectType)    

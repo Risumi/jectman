@@ -90,7 +90,11 @@ DATABASES = {
         'NAME': 'risumion_jectman',                      
         'USER': 'risumion',
         'PASSWORD': 'realmadrid21',
-        'HOST': '127.0.0.1',
+        'HOST': 'risumi.online',
+        # 'NAME': 'd199lcoehnucif',                      
+        # 'USER': 'iusxonpotgobkd',
+        # 'PASSWORD': '15582e08a19d4c32a5f3858b17d4d223e45f906f3178aa013b889fd3abef6c1b',
+        # 'HOST': 'ec2-54-83-61-142.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
