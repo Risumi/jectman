@@ -81,8 +81,8 @@ class Backlog(models.Model):
 class BacklogSprint(models.Model):
     id_sprint = models.ForeignKey('Sprint', models.DO_NOTHING, db_column='ID_Sprint', blank=True, null=True)  # Field name made lowercase.
     id_backlog = models.ForeignKey('Backlog', models.DO_NOTHING, db_column='ID_Backlog', blank=True, null=True)  # Field name made lowercase.
-    status = models.CharField(db_column='Status', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    date = models.DateField(db_column='Date', blank=True, null=True)  # Field name made lowercase.
+    status = models.CharField(db_column='status', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    date = models.DateField(db_column='date', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         db_table = 'BacklogSprint'

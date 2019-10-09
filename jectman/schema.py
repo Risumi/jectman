@@ -506,9 +506,10 @@ class SetStatus(graphene.Mutation):
     def mutate(self, info, backlog,modifiedby):    
         ok = True        
         for listBacklog in backlog:
-            Backlog.objects.filter(id = listBacklog.idBacklog).update(status = listBacklog.status,modifiedby = modifiedby,modifieddate = listBacklog.date )
-            objek = Backlog(id=listBacklog.idBacklog)
             sprint = Sprint(id=listBacklog.idSprint)
+            Backlog.objects.filter(id = listBacklog.idBacklog).update(status = listBacklog.status,modifiedby = modifiedby,modifieddate = listBacklog.date,id_sprint=sprint)
+            objek = Backlog(id=listBacklog.idBacklog)
+            
             objek2 = BacklogSprint(id_backlog=objek,id_sprint=sprint,status=listBacklog.status,date=listBacklog.date)  
             objek2.save()            
         return SetStatus(
@@ -527,7 +528,7 @@ class CreateSprintO(graphene.Mutation):
         ok = True
         project = Project(id=sprint.id_project)
         createby = User(email=sprint.createdby) 
-        sprint = Sprint(id=sprint.id,name=sprint.name, id_project=sprint.id_project,goal=sprint.goal,status=sprint.status,createddate=sprint.createddate,createdby=sprint.createdby)
+        sprint = Sprint(id=sprint.id,name=sprint.name, id_project=project,goal=sprint.goal,status=sprint.status,createddate=sprint.createddate,createdby=createby)
         sprint.save()
 
         return CreateSprintO(
@@ -545,7 +546,7 @@ class EditSprintO(graphene.Mutation):
     #3
     def mutate(self, info, sprint):        
         modifby = User(email=sprint.modifiedby)                
-        Sprint.objects.filter(id=sprint.id).update(name=sprint.name,begindate=sprint.begindate,enddate=sprint.enddate,goal=sprint.goal,status=sprint.status,retrospective=sprint.retrospective,modifieddate=sprint.modifieddate,modifiedby=sprint.modifiedby)
+        Sprint.objects.filter(id=sprint.id).update(name=sprint.name,begindate=sprint.begindate,enddate=sprint.enddate,goal=sprint.goal,status=sprint.status,retrospective=sprint.retrospective,modifieddate=sprint.modifieddate,modifiedby=modifby)
         ok = True
         return EditSprintO(
             ok = ok     
