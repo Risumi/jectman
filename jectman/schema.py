@@ -27,6 +27,10 @@ class EpicType(DjangoObjectType):
     class Meta:
         model = Epic
 
+class BacklogSprintType(DjangoObjectType):
+    class Meta:
+        model = BacklogSprint
+
 
 class ProgressType(graphene.ObjectType):
     id = graphene.String()
@@ -582,6 +586,7 @@ class Query(object):
     progress = graphene.List(ProgressType)
     userproject = graphene.List(UserprojectType, id=graphene.String())
     projectuser = graphene.List(UserprojectType, id=graphene.String())
+    backlogS = graphene.List(BacklogSprintType,id = graphene.String())
 
     def resolve_progress(self, info, **kwargs):                
         id = Project.objects.values_list('id', flat=True)
@@ -665,3 +670,12 @@ class Query(object):
                 )
                 return Userproject.objects.filter(filter)
             return Userproject.objects.all()  
+
+    def resolve_backlogS(self, info, id=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(id_sprint__exact=id)                    
+                )
+                return BacklogSprint.objects.filter(filter)
+            # return BacklogSprint.objects.all()  
