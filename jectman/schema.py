@@ -587,6 +587,7 @@ class Query(object):
     userproject = graphene.List(UserprojectType, id=graphene.String())
     projectuser = graphene.List(UserprojectType, id=graphene.String())
     backlogS = graphene.List(BacklogSprintType,id = graphene.String())
+    projectValidation = graphene.List(ProjectType,id=graphene.String())
 
     def resolve_progress(self, info, **kwargs):                
         id = Project.objects.values_list('id', flat=True)
@@ -678,4 +679,13 @@ class Query(object):
                     Q(id_sprint__exact=id)                    
                 )
                 return BacklogSprint.objects.filter(filter)
-            # return BacklogSprint.objects.all()  
+            
+    
+    def resolve_projectValidation(self, info, id=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(id__exact=id)                    
+                )
+                return Project.objects.filter(filter)
+    
