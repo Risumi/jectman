@@ -590,24 +590,24 @@ class Query(object):
     projectValidation = graphene.List(ProjectType,id=graphene.String())
 
     def resolve_progress(self, info, email=None,**kwargs):                
-        id = Userproject.objects.values_list('id_project', flat=True).filter(email__email__iexact=email)
+        id = Userproject.objects.values_list('id_project', flat=True).filter(email__email__exact=email)
         progress = []
         for i in id:      
             p = ProgressType()   
             p.id = i
-            p.complete = Backlog.objects.filter(id_project__id__iexact=i,status__icontains='Completed').count() + Backlog.objects.filter(id_project__id__iexact=i,status__icontains='Done').count()
-            p.count = Backlog.objects.filter(id_project__id__iexact=i).count() 
+            p.complete = Backlog.objects.filter(id_project__id__exact=i,status__icontains='Completed').count() + Backlog.objects.filter(id_project__id__exact=i,status__icontains='Done').count()
+            p.count = Backlog.objects.filter(id_project__id__exact=i).count() 
             progress.append(p)
         return progress
     
     def resolve_epic_progress(self, info, id=None,**kwargs):                
-        id = Epic.objects.values_list('id', flat=True).filter(id_project__id__iexact=id)
+        id = Epic.objects.values_list('id', flat=True).filter(id_project__id__exact=id)
         progress = []
         for i in id:      
             p = ProgressType()   
             p.id = i
-            p.complete = Backlog.objects.filter(id_epic__id__iexact=i,status__icontains='Completed').count() + Backlog.objects.filter(id_epic__id__iexact=i,status__icontains='Done').count()
-            p.count = Backlog.objects.filter(id_epic__id__iexact=i).count() 
+            p.complete = Backlog.objects.filter(id_epic__id__exact=i,status__icontains='Completed').count() + Backlog.objects.filter(id_epic__id__exact=i,status__icontains='Done').count()
+            p.count = Backlog.objects.filter(id_epic__id__exact=i).count() 
             progress.append(p)
         return progress
     
