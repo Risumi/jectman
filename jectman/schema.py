@@ -77,9 +77,8 @@ class CreateProject(graphene.Mutation):
         email = graphene.String()
     #3
     def mutate(self, info, id, name,description,status,email):
-        project = Project(id=id, name=name,description=description,status=status)
-        project.save()
         user = User(email=email)
+        project = Project.objects.create(id=id, name=name,description=description,status=status,id_user=user)
         userproject = Userproject(id_project=project,email=user)
         userproject.save()
 
@@ -288,8 +287,8 @@ class CreateUser(graphene.Mutation):
 
     #3
     def mutate(self, info, email,nama,password,role):        
-        user = User(email=email,nama=nama,password=password,role=role)        
-        user.save()
+        user = User.objects.create(email=email,nama=nama,password=password,role=role)        
+        # user.save()
         return CreateUser(
             email = user.email,
             nama = user.nama,            
@@ -583,24 +582,33 @@ class Query(object):
     sprint = graphene.List(SprintType, id=graphene.String())    
     epic = graphene.List(EpicType, id=graphene.String())
     user = graphene.List(UserType, email=graphene.String(), password=graphene.String())    
-    progress = graphene.List(ProgressType)
+    progress = graphene.List(ProgressType,email=graphene.String())
+    epic_progress = graphene.List(ProgressType,id=graphene.String())
     userproject = graphene.List(UserprojectType, id=graphene.String())
     projectuser = graphene.List(UserprojectType, id=graphene.String())
     backlogS = graphene.List(BacklogSprintType,id = graphene.String())
     projectValidation = graphene.List(ProjectType,id=graphene.String())
 
-    def resolve_progress(self, info, **kwargs):                
-        id = Project.objects.values_list('id', flat=True)
+    def resolve_progress(self, info, email=None,**kwargs):                
+        id = Userproject.objects.values_list('id_project', flat=True).filter(email__email__iexact=email)
         progress = []
-        
         for i in id:      
             p = ProgressType()   
             p.id = i
-            p.complete = Backlog.objects.filter(id_project__id__iexact=i,status__icontains='Completed').count()
+            p.complete = Backlog.objects.filter(id_project__id__iexact=i,status__icontains='Completed').count() + Backlog.objects.filter(id_project__id__iexact=i,status__icontains='Done').count()
             p.count = Backlog.objects.filter(id_project__id__iexact=i).count() 
             progress.append(p)
-        # a = Progress
-        # a.id ="a" 
+        return progress
+    
+    def resolve_epic_progress(self, info, id=None,**kwargs):                
+        id = Epic.objects.values_list('id', flat=True).filter(id_project__id__iexact=id)
+        progress = []
+        for i in id:      
+            p = ProgressType()   
+            p.id = i
+            p.complete = Backlog.objects.filter(id_epic__id__iexact=i,status__icontains='Completed').count() + Backlog.objects.filter(id_epic__id__iexact=i,status__icontains='Done').count()
+            p.count = Backlog.objects.filter(id_epic__id__iexact=i).count() 
+            progress.append(p)
         return progress
     
     def resolve_project(self, info, **kwargs):
