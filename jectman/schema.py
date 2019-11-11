@@ -2,7 +2,7 @@ import graphene
 from graphene import relay, ObjectType,InputObjectType
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from .models import Project, Backlog, Sprint,User,Epic,Userproject, BacklogSprint
+from .models import Project, Backlog, Sprint,User,Epic,Userproject, BacklogSprint,Sprintreport
 from graphql_relay.node.node import from_global_id
 from django.db.models import Q
 
@@ -40,6 +40,10 @@ class ProgressType(graphene.ObjectType):
 class UserprojectType(DjangoObjectType):
     class Meta:
         model = Userproject
+
+class SprintreportType(DjangoObjectType):
+    class Meta:
+        model = Sprintreport
 
 class BacklogInput(graphene.InputObjectType):
     idBacklog = graphene.String()
@@ -588,6 +592,7 @@ class Query(object):
     projectuser = graphene.List(UserprojectType, id=graphene.String())
     backlogS = graphene.List(BacklogSprintType,id = graphene.String())
     projectValidation = graphene.List(ProjectType,id=graphene.String())
+    sprintReport = graphene.List(SprintreportType,id=graphene.String())
 
     def resolve_progress(self, info, email=None,**kwargs):                
         id = Userproject.objects.values_list('id_project', flat=True).filter(email__email__exact=email)
@@ -697,3 +702,11 @@ class Query(object):
                 )
                 return Project.objects.filter(filter)
     
+    def resolve_sprintReport(self, info, id=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(id_sprint__id__exact=id)                    
+                )
+                return Sprintreport.objects.filter(filter)
+            return Sprintreport.objects.all()  

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, Backlog,Sprint,User,Epic,Userproject,BacklogSprint
+from .models import Project, Backlog,Sprint,User,Epic,Userproject,BacklogSprint,Sprintreport
 # Register your models here.
 
 admin.site.register(Project)
@@ -7,6 +7,6 @@ admin.site.register(Backlog)
 admin.site.register(Sprint)
 admin.site.register(User)
 admin.site.register(Epic)
-# admin.site.register(Sprintreport)
+admin.site.register(Sprintreport)
 admin.site.register(Userproject)
 admin.site.register(BacklogSprint)
