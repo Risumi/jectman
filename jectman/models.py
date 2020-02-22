@@ -111,6 +111,14 @@ class Sprintreport(models.Model):
     class Meta:
         db_table = 'SprintReport'
 
+class ActivityHistory(models.Model):
+    id_project = models.ForeignKey('Project', models.DO_NOTHING, db_column='ID_Project', blank=True, null=True)  # Field name made lowercase.
+    date = models.DateTimeField(db_column='Date', blank=True, null=True)  # Field name made lowercase.
+    message = models.TextField(db_column='Message', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        db_table = 'ActivityHistory'
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=80)
 
