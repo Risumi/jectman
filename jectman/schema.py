@@ -2,7 +2,7 @@ import graphene
 from graphene import relay, ObjectType,InputObjectType
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from .models import Project, Backlog, Sprint,User,Epic,Userproject, BacklogSprint,Sprintreport
+from .models import Project, Backlog, Sprint,User,Epic,Userproject, BacklogSprint, Sprintreport
 from graphql_relay.node.node import from_global_id
 from django.db.models import Q
 
@@ -216,7 +216,7 @@ class CreateBacklog(graphene.Mutation):
             status = backlog.status,
             description = backlog.description,
             createddate = backlog.createddate,
-            createdby = assigne.email
+            createdby = createby.email
         )
 
 class EditBacklog(graphene.Mutation):
@@ -274,7 +274,7 @@ class EditBacklog(graphene.Mutation):
             status = backlog.status,
             description = backlog.description,
             modifieddate = backlog.modifieddate,
-            modifiedby = assigne.email
+            modifiedby = modifby.email
         )
 
 class CreateUser(graphene.Mutation):
@@ -327,7 +327,7 @@ class CreateEpic(graphene.Mutation):
             name = epic.name,
             summary = epic.summary,
             createddate = epic.createddate,
-            createdby = createby.Email
+            createdby = createby.email
         )
 
 class EditEpic(graphene.Mutation):
@@ -357,7 +357,7 @@ class EditEpic(graphene.Mutation):
             name = epic.name,
             summary = epic.summary,
             modifieddate = epic.modifieddate,
-            modifiedby = modifby.Email
+            modifiedby = modifby.email
         )
 
 class DeleteBacklog(graphene.Mutation):
@@ -708,5 +708,5 @@ class Query(object):
                 filter = (
                     Q(id_sprint__id__exact=id)                    
                 )
-                return Sprintreport.objects.filter(filter)
+                return Sprintreport.objects.filter(filter).order_by('date')
             return Sprintreport.objects.all()  

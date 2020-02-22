@@ -103,7 +103,7 @@ class Userproject(models.Model):
         db_table = 'UserProject'
 
 class Sprintreport(models.Model):
-    id_sprint = models.ForeignKey('Sprint', models.DO_NOTHING, db_column='ID_Sprint', blank=True, null=True)  # Field name made lowercase.
+    id_sprint = models.ForeignKey('Sprint', models.DO_NOTHING, db_column='ID_Sprint', blank=True, null=True )  # Field name made lowercase.
     date = models.DateField(db_column='Date', blank=True, null=True)  # Field name made lowercase.
     completeBacklog = models.IntegerField(db_column='CompleteBacklog', blank=True, null=True)  # Field name made lowercase.
     totalBacklog= models.IntegerField(db_column='TotalBacklog', blank=True, null=True)  # Field name made lowercase.

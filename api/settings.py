@@ -40,11 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles', 
     'corsheaders',
-    'graphene_django',   
+    'graphene_django',
+    
 ]
 
 GRAPHENE = {
-    'SCHEMA': 'jectman.query.schema'
+    'SCHEMA': 'jectman.query.schema',
+    'SCHEMA_INDENT': 2
 }
 
 MIDDLEWARE = [
