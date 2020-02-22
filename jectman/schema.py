@@ -2,7 +2,7 @@ import graphene
 from graphene import relay, ObjectType,InputObjectType
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-from .models import Project, Backlog, Sprint,User,Epic,Userproject, BacklogSprint, Sprintreport
+from .models import Project, Backlog, Sprint,User,Epic,Userproject, BacklogSprint, Sprintreport,ActivityHistory
 from graphql_relay.node.node import from_global_id
 from django.db.models import Q
 
@@ -44,6 +44,10 @@ class UserprojectType(DjangoObjectType):
 class SprintreportType(DjangoObjectType):
     class Meta:
         model = Sprintreport
+
+class ActivityHistoryType(DjangoObjectType):
+    class Meta:
+        model = ActivityHistory
 
 class BacklogInput(graphene.InputObjectType):
     idBacklog = graphene.String()
@@ -593,6 +597,7 @@ class Query(object):
     backlogS = graphene.List(BacklogSprintType,id = graphene.String())
     projectValidation = graphene.List(ProjectType,id=graphene.String())
     sprintReport = graphene.List(SprintreportType,id=graphene.String())
+    activityHistory = graphene.List(ActivityHistoryType,id=graphene.String())
 
     def resolve_progress(self, info, email=None,**kwargs):                
         id = Userproject.objects.values_list('id_project', flat=True).filter(email__email__exact=email)
@@ -710,3 +715,12 @@ class Query(object):
                 )
                 return Sprintreport.objects.filter(filter).order_by('date')
             return Sprintreport.objects.all()  
+
+    def resolve_activityHistory(self, info, id=None, **kwargs):
+            # The value sent with the search parameter will be in the args variable         
+            if id:
+                filter = (
+                    Q(id_project__id__exact=id)                    
+                )
+                return ActivityHistory.objects.filter(filter).order_by('date')
+            return ActivityHistory.objects.all()  
